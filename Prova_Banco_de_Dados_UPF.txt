@@ -1,0 +1,183 @@
+CREATE TABLE Jogador (
+    id              integer         NOT NULL,
+    nome            varchar (30)    NOT NULL,
+    dataNasc        date check (dataNasc < current_date) NOT NULL,
+    nacionalidade   varchar         NOT NULL,
+    altura          decimal(3,2)    NOT NULL,
+    posicaoOrigem   varchar(30)             ,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE Estadio (
+    id      integer         NOT NULL,
+    nome    varchar(30)     NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE Equipe (
+    id      integer         NOT NULL,
+    nome    varchar(30)     NOT NULL,
+    uf      char(2) default 'RS',
+    idEstadio   integer,
+    PRIMARY KEY (id),
+    FOREIGN KEY (idEstadio) references Estadio
+);
+
+CREATE TABLE Tecnico (
+    id      integer     NOT NULL,
+    nome    varchar(30) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE EquipeJogador (
+    idEquipe      integer     NOT NULL,
+    idJogador     integer     NOT NULL,
+    dataInicio  date        NOT NULL,
+    dataFim     date                ,
+    
+    primary key(idEquipe, idJogador,dataInicio) ,
+    foreign key (idEquipe) references equipe(id),
+    foreign key (idJogador) references jogador(id)
+);
+
+CREATE TABLE TecnicoEquipe (
+    idEquipe   integer      NOT NULL,
+    idTecnico   integer      NOT NULL,	
+    dataAdm     date         NOT NULL,
+    salario     numeric(10,2)            ,
+    primary key(idTecnico,idEquipe, dataAdm),
+    foreign key (idTecnico) references tecnico(id),
+    foreign key (idEquipe)  references equipe(id)
+);
+
+CREATE TABLE Premiacao (
+    id          integer         NOT NULL,
+    descricao   varchar(30)     NOT NULL,
+    valor       numeric(10,2)   NOT NULL,
+    idJogador   integer         NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(idJogador) REFERENCES Jogador (id)
+);
+
+INSERT INTO Jogador(id,nome,dataNasc,nacionalidade,altura,posicaoOrigem) VALUES (10,'Edu','21/02/1986','Brasileiro',1.81,'Zagueiro');
+INSERT INTO Jogador VALUES (11,'Dudu','25/11/1991','Brasileiro',1.70,'Ponta de lança');
+INSERT INTO Jogador VALUES (12,'Renato','08/09/1995','Brasileiro',1.69,'Lateral');
+INSERT INTO Jogador VALUES (13,'Appel','21/03/1988','Chileno',1.90,'Centroavante');
+INSERT INTO Jogador VALUES (14,'Eusebio','10/05/1998','Argentino',1.80,'Armador');
+INSERT INTO Jogador VALUES (15,'Dimas','08/09/1995','Brasileiro',1.87,'Zagueiro');
+INSERT INTO Jogador VALUES (16,'Salles','20/12/2000','Chileno',1.90,'Centroavante');
+INSERT INTO Jogador VALUES (17,'Beto','01/02/2001','Brasileiro',1.85,'Zagueiro');
+INSERT INTO Jogador VALUES (18,'Tevez','20/12/2001','Uruguaio',1.82,'Volante');
+
+INSERT INTO Estadio VALUES (30,'Arena Alviazul');
+
+INSERT INTO Estadio VALUES (31,'Estádio Municipal Aldo Porto');
+INSERT INTO Estadio VALUES (32,'Estádio Boca do Lobo');
+
+INSERT INTO Equipe VALUES (50,'Sao Bento','SP', NULL);
+INSERT INTO Equipe VALUES (51,'Esporte Clube Pelotas','RS', 32);
+INSERT INTO Equipe VALUES (52,'Soledade Futebol Clube','RS', 31);
+INSERT INTO Equipe VALUES (53,'Clube Esportivo Lajeadense','RS', 30);
+INSERT INTO Equipe VALUES (54,'Associacao SBS','RS', NULL);
+INSERT INTO Equipe VALUES (55,'Mazembe Tout Puissant','CG', NULL);
+
+INSERT INTO Tecnico VALUES (100,'Antonio Conte');
+INSERT INTO Tecnico VALUES (101,'Jurgen Klopp');
+INSERT INTO Tecnico VALUES (102,'Joel Santana');
+INSERT INTO Tecnico VALUES (103,'Thomas Tuchel');
+INSERT INTO Tecnico VALUES (104,'Pep Guardiola');
+INSERT INTO Tecnico VALUES (105,'Dunga');
+
+INSERT INTO EquipeJogador(dataInicio, dataFim, idJogador, idEquipe) VALUES ('10/02/2019','10/02/2021',11,51);
+INSERT INTO EquipeJogador(dataInicio, dataFim, idJogador, idEquipe) VALUES ('01/01/2019','31/12/2019',11,50);
+INSERT INTO EquipeJogador(dataInicio, dataFim, idJogador, idEquipe) VALUES ('10/08/2020','10/08/2021',15,54);
+INSERT INTO EquipeJogador(dataInicio, dataFim, idJogador, idEquipe) VALUES ('01/03/2020','31/03/2022',10,52);
+INSERT INTO EquipeJogador(dataInicio, dataFim, idJogador, idEquipe) VALUES ('31/01/2021','31/12/2021',18,50);
+INSERT INTO EquipeJogador(dataInicio, dataFim, idJogador, idEquipe) VALUES ('31/01/2021','31/12/2021',17,50);
+INSERT INTO EquipeJogador(dataInicio, dataFim, idJogador, idEquipe) VALUES('31/01/2021','31/05/2022',12,54);
+INSERT INTO EquipeJogador(dataInicio, dataFim, idJogador, idEquipe) VALUES ('01/07/2022','01/05/2022',16,53);
+INSERT INTO EquipeJogador(dataInicio, idJogador, idEquipe) VALUES ('01/04/2022',10,51);
+INSERT INTO EquipeJogador(dataInicio, idJogador, idEquipe) VALUES ('31/10/2022',14,54);
+
+INSERT INTO TecnicoEquipe(dataAdm, salario, idTecnico, idEquipe) VALUES ('01/07/2022',45000,102,54);
+INSERT INTO TecnicoEquipe(dataAdm, salario, idTecnico, idEquipe) VALUES ('22/03/2018',60000,100,50);
+INSERT INTO TecnicoEquipe(dataAdm, salario, idTecnico, idEquipe) VALUES ('01/07/2022',120000,100,53);
+INSERT INTO TecnicoEquipe(dataAdm, salario, idTecnico, idEquipe) VALUES ('11/01/2021',200000,101,52);
+INSERT INTO TecnicoEquipe(dataAdm, salario, idTecnico, idEquipe) VALUES ('01/01/2022',98000,103,51);
+
+INSERT INTO Premiacao VALUES (100, 'artilharia', 1700,11);
+INSERT INTO Premiacao VALUES (101, 'campeão', 5000,10);
+INSERT INTO Premiacao VALUES (102, 'campeão', 7700,12);
+INSERT INTO Premiacao VALUES (103, 'disciplina', 2000,16);
+INSERT INTO Premiacao VALUES (104, 'melhor em campo', 5000,18);
+INSERT INTO Premiacao VALUES (105, 'melhor em campo', 5000,18);
+INSERT INTO Premiacao VALUES (106, 'melhor em campo', 500,11);
+
+
+
+
+
+
+-- 1 - faça um comando SQL para listar o nome, nacionalidade, posição de origem dos jogadores com mais de 1.70cm de altura e com menos de 21 anos 
+
+SELECT nome, nacionalidade, posicaoOrigem
+FROM jogador
+WHERE altura > 1.70 AND dataNasc > '01/01/2001';
+
+-- 2 - Faça um comando SQL para listar o nome dos jogadores, a descrição e o valor das permiações recebidas, que tenham relaçõa com a palavra "melhor". Listar em ordem do maior para o menor alor da premiação
+
+SELECT jogador.nome, premiacao.descricao, premiacao.valor
+FROM jogador JOIN premiacao
+ON jogador.id = premiacao.idjogador
+WHERE descricao like '%melhor%'
+ORDER BY premiacao.valor DESC;
+
+-- 3 - Faça um comando SQL para listar o nome dos jogadores e o nome das suas respectivas equipes. Listar apenas os jogadores da equipe "Soledade Futebol Clube"
+
+SELECT jogador.nome, equipe.nome 
+FROM jogador JOIN equipeJogador
+ON jogador.id = equipeJogador.idjogador
+JOIN equipe
+ON equipe.id = equipeJogador.idequipe
+WHERE equipe.nome = 'Soledade Futebol Clube';
+
+-- 4 - Faça um comando SQL para listar o nome, nacionalidade, e a posição de origem de todos os jogadores com contrato em andamento com uma equipe
+
+SELECT nome, nacionalidade, posicaoOrigem
+FROM jogador JOIN equipeJogador
+ON jogador.id = equipeJogador.idjogador
+WHERE equipejogador.datafim IS NULL;
+
+-- 5 - Faça um comando SQL para inserir um registro/linha na tabela jogadorEquipe
+
+INSERT INTO equipeJogador(dataInicio, idjogador, idequipe)
+VALUES ('05/12/2022', 11, 51);
+
+-- 6 - Faça um comando SQL para aumentar o salário de todos os técnicos com salário inferior a 70.000 e que foram admitidos após a data 31/12/2021
+
+UPDATE tecnicoEquipe
+SET salario = salario * 1.1
+WHERE salario < 70000 AND dataAdm > '31/12/2021';
+
+-- 7 - Faça um comando SQL para excluir das premiações do jogador de nome Tevez
+
+DELETE FROM premiacao
+WHERE idjogador = (SELECT id
+				  from jogador
+				  where nome = 'Tevez');
+
+-- 8 - Faça um comando SQL para mostrar o nome dos jogadores que nao possuem premiacao
+
+SELECT nome 
+FROM  jogador 
+WHERE id NOT IN (select distinct idjogador FROM premiacao);
+
+-- 9 - Faça um comando SQL para mostrar o nome das equipes e nome dos seus estadios. Mostra também as equipes que nao possuem estadios
+
+SELECT equipe.nome, estadio.nome
+FROM equipe left JOIN estadio
+ON equipe.idestadio = estadio.id;
+
+
+
+
